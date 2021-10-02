@@ -25,7 +25,7 @@ option = st.sidebar.selectbox(
 
 if option=='Enter queue':
   
-    ticketSystem = Queue()
+ticketSystem = Queue()
 
 
 ticketNo = 1000
