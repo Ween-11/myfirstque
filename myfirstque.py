@@ -1,63 +1,56 @@
-import streamlit as st
-
-import numpy as np
-import pandas as pd
-import time
-
-st.header("My first Python Web App")
-
-readme = st.checkbox("readme first")
-
-if readme:
-
-    st.write("""
-        This is a web app demo using [streamlit](https://streamlit.io/) library. It is hosted on [heroku](https://www.heroku.com/). You may get the codes via [github](https://github.com/richieyuyongpoh/myfirstapp)
-        """)
-
-    st.write ("For more info, please contact:")
-
-    st.write("<a href='https://www.linkedin.com/in/yong-poh-yu/'>Dr. Yong Poh Yu </a>", unsafe_allow_html=True)
-
-option = st.sidebar.selectbox(
-    'Select from option below',
-     ['Enter queue','map','T n C','Long Process'])
+class Node:
+    def __init__(self, name, num):
+      # Customer detail, meaningful label
+        self.customerDetails = [name, num]
+        self.nextNode = None
 
 
-if option=='Enter queue':
+class Queue: 
+      
+    def __init__(self): 
+        self.firstNode = self.LastNode = None
+        # Empty
+        self.size = 0
   
- 
+    def isEmpty(self): 
+        return self.firstNode == None
+      
+    # Method to add an item to the queue 
+    def enqueue(self, name, num): 
+        newNode = Node(name, num) 
+          
+        if self.LastNode == None: 
+            self.firstNode = self.LastNode = newNode
+            self.size = self.size + 1
+        return
 
-    st.enter_queue(ticketSystem)
+        self.LastNode.nextNode = newNode
+        self.LastNode = newNode 
+        self.size = self.size + 1
+  
+    # Method to remove an item from queue 
+    def dequeue(self): 
+          
+        if self.isEmpty(): 
+            print("Nothing to dequeue.")
+            return
+        removeNode = self.firstNode
+        self.firstNode = removeNode.nextNode
+        self.size = self.size - 1
 
-elif option=='map':
-    map_data = pd.DataFrame(
-    np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
-    columns=['lat', 'lon'])
+        if self.firstNode == None: 
+            self.LastNode = None
 
-    st.map(map_data)
-
-elif option=='T n C':
-
-    st.write('Before you continue, please read the [terms and conditions](https://www.gnu.org/licenses/gpl-3.0.en.html)')
-    show = st.checkbox('I agree the terms and conditions')
-    if show:
-        st.write(pd.DataFrame({
-        'Intplan': ['yes', 'yes', 'yes', 'no'],
-        'Churn Status': [0, 0, 0, 1]
-        }))
-
-
-else:
-    'Starting a long computation...'
-
-    
-    latest_iteration = st.empty()
-    bar = st.progress(0)
-
-    for i in range(100):
-   
-        latest_iteration.text(f'Iteration {i+1}')
-        bar.progress(i + 1)
-        time.sleep(0.1)
-
-    '...and now we\'re done!'
+    def traverse(self):
+        currentNode = self.firstNode
+        while currentNode is not None:
+            print (currentNode.customerDetails)
+            currentNode = currentNode.nextNode
+        
+    def getFirstElement(self):
+        
+        if self.isEmpty(): 
+            print("Empty Queue Now.")
+            return
+        
+        return self.firstNode.customerDetails
