@@ -1,81 +1,55 @@
 import streamlit as st
-from binarysearchtree import foodMenu
+from binarysearchtree import qu
 import pandas as pd
 
-if 'hasFood' not in st.session_state:
-    st.session_state.hasFood = 0
+ticketSystem = Queue()
 
 
-st.header("Welcome to ABC Simple Food Menu Demo")
-
-readme = st.checkbox("readme first")
-
-if readme:
-
-    st.write("""
-        This is a simple binary search tree demo using [streamlit](https://streamlit.io/) library. It is hosted on [heroku](https://www.heroku.com/). You may get the codes via [github](https://github.com/richieyuyongpoh/binarySearchTreeDemo)
-        """)
-
-    st.write ("For more info, please contact:")
-
-    st.write("<a href='https://www.linkedin.com/in/yong-poh-yu/'>Dr. Yong Poh Yu </a>", unsafe_allow_html=True)
-
-st.write("Choose an option from the radio button on the side bar to continue.")
+ticketNo = 1000
 
 
-option = st.sidebar.selectbox(
-    'Select an option',
-     ['Add a food','Find a food','Get the sorted food list','Reset entire food menu system'])
+while True:
+    print("\n\nWelcome to the RBA Ticket Booking System. You will be served soon.\n")
+    print("\nFor Customer: Press 1 to queue.\n")
+    print("For Customer Care Consultant: Press 2 to serve the next customer.\n")
+    print("For Customer Care Consultant: Press 3 to get the list of customers in the waiting queue.\n")
 
-if option == 'Add a food':
-    foodName = st.text_input("Please enter the food name")
-    foodPrice = st.text_input("Please enter the food price")
-    submit = st.button('submit')
+    print("Press x to end the system. ")
+    step = input("\nPlease enter the number.\n\n")
+    if step.lower() == 'x':
+        print("Thank you for using our service. ")
+        break
+    try:
+        step = int(step)
 
-    if submit:
+        if step!= 1 and step!=2 and step!=3:
+            print("\nYou have entered an undefined number\n")
 
-        if foodName != "" and foodPrice !="":
 
-            if st.session_state.hasFood==1:
-
-                st.session_state.RBAFoodMenu.addNode(foodName,foodPrice)
-                st.write("[{} , RM {}] has been added to the food Menu.".format(foodName, foodPrice))
+        elif step==1:
+          
             
+            customerName = input("\nPlease enter your name.\n\n")
+            ticketNo = ticketNo + 1
+            ticketSystem.enqueue(customerName, ticketNo)
+            waitingTime = 2*ticketSystem.size
+
+            print("\nDear {}. Your ticket no is {}.".format(customerName,ticketNo))
+            print("Your estimated waiting time is {} minutes.\n\n".format(waitingTime))
+
+        elif step==2:
+            counterNo = input("\nPlease enter your counterNo.\n\n")
+
+            if ticketSystem.size >0:
+                print("No # {} , counter {}".format(ticketSystem.getFirstElement()[1],counterNo))
+
+                ticketSystem.dequeue()
             else:
-                st.session_state.RBAFoodMenu = foodMenu(foodName,foodPrice)
-                st.write("[{} , RM {}] has been added to the food Menu.".format(foodName, foodPrice))
-                st.session_state.hasFood = 1
-
+                print("No one in the queue now.")
+        
         else:
-            st.write("Please fill in the details first. ")
-
-
-elif option == 'Find a food':
-        
-
-    if st.session_state.hasFood ==1:
-
-        foodName = st.text_input("Please enter the food name that you want to search for")
-        
-        st.write("The food is in the Food Menu: {}".format(st.session_state.RBAFoodMenu.findNode(foodName)))
- 
-
-    else:
-        st.write("Empty Food Menu.")
-
-
+            ticketSystem.traverse()
+         
     
-elif option == 'Get the sorted food list':
-
-    if st.session_state.hasFood ==1:
-        st.write("The list in the Food Menu:")
-        st.write(pd.DataFrame(st.session_state.RBAFoodMenu.inOrderTraversal(),columns=["Food Name", "Price"]))
-
-    else:
-        st.write("Empty Food Menu.")
-
-else:
-    st.write("The food menu system has been reset.")
-
-    st.session_state.hasFood = 0 
-    st.session_state.RBAFoodMenu = []
+    except ValueError:
+        print("\nPlease enter a number.\n\n")
